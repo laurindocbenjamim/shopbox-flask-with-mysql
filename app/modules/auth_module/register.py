@@ -31,8 +31,8 @@ def admin():
 @cross_origin(methods=['POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.args.get('username')
+        password = request.args.get('password')
         conn = init_db() 
         error = None
 
