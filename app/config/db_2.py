@@ -74,7 +74,7 @@ def get_db():
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
             print("Database does not exist")
         else:
-            print(err)
+            print(f"Process finalized with error: {err}")
     else:
         cnx.close()
     finally:

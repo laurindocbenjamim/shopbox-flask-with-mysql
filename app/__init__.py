@@ -39,8 +39,11 @@ def create_app(test_config=None):
     #from . import auth
     from . modules.auth_module import auth
     from . modules.auth_module import authapi
+    from . modules.auth_module import register
     app.register_blueprint(auth.bp)
     app.register_blueprint(authapi.bp)
+    app.register_blueprint(register.bp)
+
 
     # Import the Blog Blueprint
     #from . modules.blog_module import blog
