@@ -25,7 +25,7 @@ def create_logger_file():
 
 
 """   Create a connection with mysql """
-def connect_to_mysql(config, attempts=3, delay=2):
+def connect_to_mysql(config, attempts=4, delay=2):
     logger = create_logger_file()
     attempt = 1
     #Implement a recoonection routine

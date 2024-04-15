@@ -10,20 +10,40 @@ from flask_cors import CORS, cross_origin
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.config.db_2 import init_db
-from app.config.db import get_db
+from application.config.db_2 import init_db
+from application.config.db import get_db
 from mysql.connector import ProgrammingError
-from app.config.jwtconfig import token_required, generate_token, decode_token, token_required
+from application.config.jwtconfig import token_required, generate_token, decode_token, token_required
 from functools import wraps
 
-bp = Blueprint('apiautha', __name__, url_prefix='/ap/autha')
+bp = Blueprint('apiauth', __name__, url_prefix='/api/auth')
 CORS(bp)
 
-@bp.route('/adm', methods=['GET','POST'])
+@bp.route('/admin', methods=['GET','POST'])
 @cross_origin(methods=['GET'])
 #@token_required
 def admin():
-    return render_template(url_for('frontend.register.login'))
+    try:
+        response = decode_token(token=request.headers["Authorization"]) 
+    except Exception as e:
+        return f"Request finalized with the error: {e}"
+    
+    if len(response) > 0:
+        if response['status_code'] == 200:
+
+            conn = init_db() # Database connection
+            try:
+                with conn.cursor(dictionary=True) as cursor:
+                    cursor.execute("SELECT * FROM peoples;")
+                    obj = cursor.fetchall()
+                    data = jsonify(obj)
+                    return obj
+            except AttributeError as e:
+                return f" Database connection failed with the error: {e}"
+            finally:
+                conn.close()
+
+    return jsonify({"message": "request failed", "status_code": response['status_code']}, response['status_code'])
 # ============= USER REGISTRACTION FUNCTION ==================
 
 
@@ -33,6 +53,8 @@ def register():
     if request.method == 'POST':
         username = request.args.get('username')
         password = request.args.get('password')
+        #username = request.form['username']
+        #password = request.form['password']
         conn = init_db() 
         error = None
 
@@ -68,8 +90,10 @@ import json
 @cross_origin(methods=['POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.args.get('username')
+        password = request.args.get('password')
+        #username = request.form['username']
+        #password = request.form['password']
       
         conn = init_db()
         error = None
