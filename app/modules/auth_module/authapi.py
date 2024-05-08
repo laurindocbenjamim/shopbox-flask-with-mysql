@@ -1,7 +1,7 @@
-import functools
+#import functools
 
 from datetime import datetime, timedelta
-from functools import wraps
+#from functools import wraps
 from flask import (
     Blueprint, flash, g, redirect, render_template, make_response, request, session, url_for,jsonify,
     abort
@@ -14,7 +14,7 @@ from app.config.db_2 import init_db
 from app.config.db import get_db
 from mysql.connector import ProgrammingError
 from app.config.jwtconfig import token_required, generate_token, decode_token, token_required
-from functools import wraps
+
 
 bp = Blueprint('apiauth', __name__, url_prefix='/api/auth')
 CORS(bp)
